@@ -4,23 +4,12 @@ pipeline {
         FLASK_APP = "app.py"
         FLASK_ENV = "development"
     }
-    stages {
-        stage('Install Python and Pip') {
-            steps {
-                sh 'apt-get update && apt-get install -y python3-pip python3-dev'
-            }
-        }
-        stage('Checkout') {
+         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', branches: [[name: 'Samsammed-dev-1']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Samsammed/pip_aws.git']]])
             }
         }
-        stage('Install Dependencies') {
-            steps {
-                sh 'pip install --upgrade pip && pip install -r requirements.txt'
-            }
-        }
-        stage('Test') {
+          stage('Test') {
             steps {
                 sh 'pytest unit_tests.py'
             }
