@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Install Python and Pip') {
             steps {
-                sh 'sudo apt-get update && sudo apt-get install -y python3-pip python3-dev'
+                sh 'apt-get update && apt-get install -y python3-pip python3-dev'
             }
         }
         stage('Checkout') {
