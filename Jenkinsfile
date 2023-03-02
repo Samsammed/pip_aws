@@ -5,12 +5,17 @@ pipeline {
         FLASK_ENV = "development"
     }
     stages {
-        stage('Checkout') {
+        stage('Install Pip') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/raoufcherfa/employe.git']]])
+                sh 'curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.py'
             }
         }
-        stage('Build') {
+        stage('Checkout') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: 'Samsammed-dev-1']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Samsammed/pip_aws.git']]])
+            }
+        }
+        stage('Install Dependencies') {
             steps {
                 sh 'pip install -r requirements.txt'
             }
@@ -18,6 +23,11 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'pytest unit_tests.py'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'python setup.py build'
             }
         }
         stage('Run API') {
