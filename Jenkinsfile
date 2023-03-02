@@ -7,13 +7,7 @@ pipeline {
     
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'Samsammed-dev-1']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Samsammed/pip_aws.git']]])
-            }
-        }
-      stages {
-        stage('Install Pip') {
-            steps {
-                sh 'curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python get-pip.py'
+                checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Samsammed/pip_aws.git']]])
             }
         }
         stage('Install Dependencies') {
