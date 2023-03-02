@@ -1,16 +1,18 @@
 pipeline {
-    agent any
+    agent {
+      any { image 'python:3' }
+    }
     environment {
         FLASK_APP = "app.py"
         FLASK_ENV = "development"
     }
-    
+    stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Samsammed/pip_aws.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://gitlab.com/Samsammed/aws']]])
             }
         }
-        stage('Install Dependencies') {
+        stage('Build') {
             steps {
                 sh 'pip install -r requirements.txt'
             }
@@ -20,14 +22,9 @@ pipeline {
                 sh 'pytest unit_tests.py'
             }
         }
-        stage('Build') {
-            steps {
-                sh 'python setup.py build'
-            }
-        }
         stage('Run API') {
             steps {
-                sh 'python app.py &'
+                sh 'python3 api.py &'
             }
         }
         stage('Merge to Dev') {
