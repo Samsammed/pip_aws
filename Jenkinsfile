@@ -1,22 +1,30 @@
 pipeline {
-    agent any
+    agent {
+      any { image 'python:3' }
+    }
     environment {
         FLASK_APP = "app.py"
         FLASK_ENV = "development"
     }
-         stage('Checkout') {
+    stages {
+        stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'Samsammed-dev-1']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Samsammed/pip_aws.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Samsammed/pip_aws']]])
             }
         }
-          stage('Test') {
+        stage('Build') {
+            steps {
+                sh 'sudo apt-get update && sudo apt-get install -y python3-pip python3-dev'
+            }
+        }
+        stage('Test') {
             steps {
                 sh 'pytest unit_tests.py'
             }
         }
         stage('Run API') {
             steps {
-                sh 'python app.py &'
+                sh 'python3 api.py &'
             }
         }
         stage('Merge to Dev') {
